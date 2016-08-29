@@ -1,0 +1,20 @@
+{
+  "name": "webmod/laravel-local",
+  "description": "WM Package that adds functionality for local business websites built with Laravel 5.3.*",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Rory Hellyer",
+      "email": "rory@webmodularity.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "WebModularity\\LaravelLocal\\": "src/"
+    }
+  },
+  "require": {
+    "laravel/framework": "~5.3.0",
+    "php": ">=5.6.4"
+  }
+}
