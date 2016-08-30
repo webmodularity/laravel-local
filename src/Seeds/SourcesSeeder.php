@@ -1,5 +1,7 @@
 <?php
 
+namespace WebModularity\LaravelLocal\Seeds;
+
 use Illuminate\Database\Seeder;
 
 class SourcesSeeder extends Seeder
