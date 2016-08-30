@@ -3,6 +3,7 @@
 namespace WebModularity\LaravelLocal\Seeds;
 
 use Illuminate\Database\Seeder;
+use DB;
 
 class SourcesSeeder extends Seeder
 {
