@@ -16,7 +16,6 @@ WebModularity\LaravelLocal\LocalServiceProvider::class,
 Publish:
 ```
 php artisan vendor:publish --provider="WebModularity\LaravelLocal\LocalServiceProvider" --tag=config
-php artisan db:seed --class=WebModularity\LaravelLocal\database\seeds\SourcesSeeder
 ```
 
 Modify `config/local.php` to suit. Documentation is inline.
@@ -24,7 +23,24 @@ Modify `config/local.php` to suit. Documentation is inline.
 ### Migration & Seeding
 
 > #### New Server Installation
-> If this is going to be installed on a server other than WM or this is the first time installing these migration commands will need to be run **ONCE**.
+> If this is going to be installed on a server other than WM the following migration commands will need to be run **ONCE**. In most cases this step should be skipped. May need to delete migration table or delete record to avoid a rollback call.
 ```
 php artisan migrate --path=vendor/webmod/laravel-local/database/migrations/common
+php artisan db:seed --class="WebModularity\LaravelLocal\Seeds\SourcesSeeder"
+```
+
+To build necessary databases run:
+```
+php artisan migrate
+```
+
+### Usage
+##### Hours
+```
+php artisan local:sync-hours
+```
+
+##### Reviews
+```
+php artisan local:sync-reviews
 ```

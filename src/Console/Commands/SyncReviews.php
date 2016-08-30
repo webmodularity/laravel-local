@@ -5,7 +5,7 @@ namespace WebModularity\LaravelLocal\Console\Commands;
 use Illuminate\Console\Command;
 use WebModularity\LaravelLocal\Review;
 use WebModularity\LaravelLocal\Source;
-use Carbon;
+use Carbon\Carbon;
 
 class SyncReviews extends Command
 {
