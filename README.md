@@ -44,3 +44,11 @@ php artisan local:sync-hours
 ```
 php artisan local:sync-reviews
 ```
+
+### Task Scheduling
+To run the commands automatically from the cron make sure that the task scheduler is running from the cron. See https://laravel.com/docs/5.3/scheduling for more info.
+
+The command on the live webserver needs to run as `www-data`. Using `sudo -u www-data crontab -e` add:
+```
+* * * * * /usr/local/bin/php /www/laravel5/PROJECT_NAME/artisan schedule:run >> /dev/null 2>&1
+```
