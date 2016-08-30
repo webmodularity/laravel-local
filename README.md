@@ -12,17 +12,19 @@ After updating composer, add the service provider to the providers array in conf
 WebModularity\LaravelLocal\LocalServiceProvider::class,
 ```
 
-Publish config:
+### Config
+Publish:
 ```
 php artisan vendor:publish --provider="WebModularity\LaravelLocal\LocalServiceProvider" --tag=config
+php artisan db:seed --class=WebModularity\LaravelLocal\database\seeds\SourcesSeeder
 ```
 
-Add settings specific to business in the `config/local.php`
+Modify `config/local.php` to suit. Documentation is inline.
 
 ### Migration & Seeding
 
 > #### New Server Installation
 > If this is going to be installed on a server other than WM or this is the first time installing these migration commands will need to be run **ONCE**.
-> ```
-php artisan migrate --path=
-> ```
+```
+php artisan migrate --path=vendor/webmod/laravel-local/database/migrations/common
+```
