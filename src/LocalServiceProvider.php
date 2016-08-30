@@ -28,14 +28,14 @@ class LocalServiceProvider extends ServiceProvider
         });
 
         // Config
-        $this->mergeConfigFrom(__DIR__ . '/config/local.php', 'local');
+        $this->mergeConfigFrom(__DIR__ . '../config/local.php', 'local');
     }
 
     public function boot() {
         // Migrations
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '../database/migrations');
 
         // Config
-        $this->publishes([__DIR__ . '/config/local.php' => config_path('local.php')], 'config');
+        $this->publishes([__DIR__ . '../config/local.php' => config_path('local.php')], 'config');
     }
 }

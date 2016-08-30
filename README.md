@@ -4,8 +4,20 @@ Package used for adding reviews, hours, etc. to websites built for local busines
 ### Installation
 Add this record to composer.json:
 ```
-"webmod/laravel-local": "*"
+composer require webmod/laravel-local
 ```
+
+After updating composer, add the service provider to the providers array in config/app.php
+```
+WebModularity\LaravelLocal\LocalServiceProvider::class,
+```
+
+Publish config:
+```
+php artisan vendor:publish --provider="WebModularity\LaravelLocal\LocalServiceProvider" --tag=config
+```
+
+Add settings specific to business in the `config/local.php`
 
 ### Migration & Seeding
 
