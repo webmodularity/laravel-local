@@ -5,7 +5,7 @@ namespace WebModularity\LaravelLocal\Console\Commands;
 use Illuminate\Console\Command;
 use WebModularity\LaravelLocal\Hour;
 use WebModularity\LaravelLocal\Source;
-use Carbon;
+use Carbon\Carbon;
 
 class SyncHours extends Command
 {
