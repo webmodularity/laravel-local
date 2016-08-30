@@ -45,8 +45,8 @@ class SyncHours extends Command
             $hoursChanged = call_user_func([Hour::class, 'importFrom' . $source->name], $data);
         }
 
-        if ($hoursChanged > 0) {
+        //if ($hoursChanged > 0) {
             $this->line(Carbon::now() . ' Hour Records Changed: ' . intval($hoursChanged));
-        }
+        //}
     }
 }
