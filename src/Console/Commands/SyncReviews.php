@@ -49,7 +49,7 @@ class SyncReviews extends Command
         }
 
         if ($reviewsAdded > 0) {
-            $this->line(Carbon::now() . 'Reviews Added: ' . $reviewsAdded);
+            $this->line(Carbon::now() . ' Reviews Added: ' . $reviewsAdded);
         }
     }
 }
