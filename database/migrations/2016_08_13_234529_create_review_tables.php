@@ -18,7 +18,7 @@ class CreateReviewTables extends Migration
             $table->string('review_provider_author_id', 30);
             $table->string('name', 100);
             $table->string('url_image', 255)->nullable();
-            $table->unique(['review_provider_id', 'review_provider_author_id']);
+            $table->unique(['review_provider_id', 'review_provider_author_id'], 'provider_provider_author_unique');
             $table->foreign('review_provider_id', 'review_providers_id_review_authors_review_provider_id')->references('id')->on('common.review_providers')->onUpdate('cascade');
         });
 
