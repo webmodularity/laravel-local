@@ -21,7 +21,7 @@ class SyncHours extends Command
      *
      * @var string
      */
-    protected $description = 'Imports hours from Google source.';
+    protected $description = 'Imports hours from Google provider.';
 
     /**
      * Create a new command instance.
@@ -38,11 +38,12 @@ class SyncHours extends Command
     {
         // Currently only supports Google for hours import
         $provider = Provider::where('slug', 'google')->first();
-        if (method_exists(Hour::class, 'importFrom' . studly_case($provider->slug))
-            && method_exists(Provider::class, 'getDataFrom' . studly_case($provider->slug))
+        $studlyCaseSlug = studly_case($provider->slug);
+        if (method_exists(Hour::class, 'importFrom' . $studlyCaseSlug)
+            && method_exists(Provider::class, 'getDataFrom' . $studlyCaseSlug)
         ) {
-            $data = call_user_func([Provider::class, 'getDataFrom' . studly_case($provider->slug)]);
-            $hoursChanged = call_user_func([Hour::class, 'importFrom' . studly_case($provider->slug)], $data);
+            $data = call_user_func([Provider::class, 'getDataFrom' . $studlyCaseSlug]);
+            $hoursChanged = call_user_func([Hour::class, 'importFrom' . $studlyCaseSlug], $data);
         }
 
         if ($hoursChanged > 0) {

@@ -22,7 +22,7 @@ class SyncReviews extends Command
      *
      * @var string
      */
-    protected $description = 'Imports reviews from available sources.';
+    protected $description = 'Imports reviews from available providers.';
 
     /**
      * Create a new command instance.
@@ -38,21 +38,20 @@ class SyncReviews extends Command
     public function handle()
     {
         $reviewsAdded = 0;
-        $reviewSources = ReviewProvider::all()->keyBy('provider.slug');
-        foreach (config('local.sources', []) as $sourceSlug => $sourceData) {
-            if (in_array($sourceSlug, $reviewSources->keys()->toArray())
-                && method_exists(Review::class, 'importFrom' . studly_case($sourceSlug))
-                && method_exists(Provider::class, 'getDataFrom' . studly_case($sourceSlug))
+        $reviewProviders = ReviewProvider::all()->keyBy('provider.slug');
+        foreach (Provider::getConfiguredProviderSlugs() as $providerSlug) {
+            $studlyCaseSlug = studly_case($providerSlug);
+            if (in_array($providerSlug, $reviewProviders->keys()->toArray())
+                && method_exists(Review::class, 'importFrom' . $studlyCaseSlug)
+                && method_exists(Provider::class, 'getDataFrom' . $studlyCaseSlug)
             ) {
-                $data = call_user_func([Provider::class, 'getDataFrom' . studly_case($sourceSlug)]);
-                $reviewsAdded += call_user_func([Review::class, 'importFrom' . studly_case($sourceSlug)], $reviewSources[$sourceSlug]->id, $data);
+                $data = call_user_func([Provider::class, 'getDataFrom' . $studlyCaseSlug]);
+                $reviewsAdded += call_user_func([Review::class, 'importFrom' . $studlyCaseSlug], $reviewProviders[$providerSlug]->id, $data);
             }
         }
 
         if ($reviewsAdded > 0) {
             $this->line(Carbon::now() . ' Reviews Added: ' . $reviewsAdded);
-        } else {
-            $this->line('No Reviews Added!' . print_r($data));
         }
     }
 }
