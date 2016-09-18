@@ -12,20 +12,20 @@ class CreateReviewTables extends Migration
      */
     public function up()
     {
-        Schema::create('local_review_authors', function (Blueprint $table) {
+        Schema::create('review_authors', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->smallInteger('source_id')->unsigned();
-            $table->string('source_author_id', 30);
+            $table->smallInteger('review_provider_id')->unsigned();
+            $table->string('review_provider_author_id', 30);
             $table->string('name', 100);
             $table->string('url_image', 255)->nullable();
-            $table->unique(['source_id', 'source_author_id']);
-            $table->foreign('source_id')->references('id')->on('common.local_sources')->onUpdate('cascade');
+            $table->unique(['review_provider_id', 'review_provider_author_id']);
+            $table->foreign('review_provider_id')->references('id')->on('common.review_providers')->onUpdate('cascade');
         });
 
-        Schema::create('local_reviews', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->smallInteger('author_id')->unsigned();
-            $table->string('source_review_id', 50)->nullable();
+            $table->string('review_id', 50)->nullable();
             $table->boolean('active')->default(false);
             $table->tinyInteger('rating')->default(1);
             $table->text('review');
@@ -35,7 +35,7 @@ class CreateReviewTables extends Migration
             $table->timestamps();
             $table->index(['active', 'rating', 'review_updated_at']);
             $table->index(['active', 'review_updated_at']);
-            $table->foreign('author_id')->references('id')->on('local_review_authors')->onUpdate('cascade');
+            $table->foreign('author_id')->references('id')->on('review_authors')->onUpdate('cascade');
         });
     }
 
@@ -46,7 +46,7 @@ class CreateReviewTables extends Migration
      */
     public function down()
     {
-        Schema::drop('local_reviews');
-        Schema::drop('local_review_authors');
+        Schema::drop('reviews');
+        Schema::drop('review_authors');
     }
 }

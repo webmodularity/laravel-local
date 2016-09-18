@@ -9,13 +9,6 @@ use Log;
 class Hour extends Model
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'local_hours';
-
-    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool

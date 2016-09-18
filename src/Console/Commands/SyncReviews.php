@@ -4,7 +4,8 @@ namespace WebModularity\LaravelLocal\Console\Commands;
 
 use Illuminate\Console\Command;
 use WebModularity\LaravelLocal\Review;
-use WebModularity\LaravelLocal\Source;
+use WebModularity\LaravelProviders\ReviewProvider;
+use WebModularity\LaravelProviders\Provider;
 use Carbon\Carbon;
 
 class SyncReviews extends Command
@@ -37,14 +38,14 @@ class SyncReviews extends Command
     public function handle()
     {
         $reviewsAdded = 0;
-        $reviewSources = Source::whereNotNull('url_review')->get()->keyBy('name');
-        foreach (config('local.sources', []) as $sourceName => $sourceData) {
-            if (in_array($sourceName, $reviewSources->keys()->toArray())
-                && method_exists(Review::class, 'importFrom' . $sourceName)
-                && method_exists(Source::class, 'getDataFrom' . $sourceName)
+        $reviewSources = ReviewProvider::all()->keyBy('provider.slug');
+        foreach (config('local.sources', []) as $sourceSlug => $sourceData) {
+            if (in_array($sourceSlug, $reviewSources->keys()->toArray())
+                && method_exists(Review::class, 'importFrom' . studly_case($sourceSlug))
+                && method_exists(Provider::class, 'getDataFrom' . studly_case($sourceSlug))
             ) {
-                $data = call_user_func([Source::class, 'getDataFrom' . $sourceName]);
-                $reviewsAdded += call_user_func([Review::class, 'importFrom' . $sourceName], $reviewSources[$sourceName]->id, $data);
+                $data = call_user_func([Provider::class, 'getDataFrom' . studly_case($sourceSlug)]);
+                $reviewsAdded += call_user_func([Review::class, 'importFrom' . studly_case($sourceSlug)], $reviewSources[$sourceSlug]->id, $data);
             }
         }
 

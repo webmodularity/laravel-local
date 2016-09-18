@@ -12,7 +12,7 @@ class CreateLocalHoursTable extends Migration
      */
     public function up()
     {
-        Schema::create('local_hours', function (Blueprint $table) {
+        Schema::create('hours', function (Blueprint $table) {
             $table->tinyInteger('weekday_index')->unsigned();
             $table->time('time_start');
             $table->time('time_end')->nullable();
@@ -28,6 +28,6 @@ class CreateLocalHoursTable extends Migration
      */
     public function down()
     {
-        Schema::drop('local_hours');
+        Schema::drop('hours');
     }
 }

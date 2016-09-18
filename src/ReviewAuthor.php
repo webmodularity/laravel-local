@@ -7,18 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ReviewAuthor extends Model
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'local_review_authors';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['source_id', 'source_author_id', 'name', 'url_image'];
+    protected $fillable = ['review_provider_id', 'review_provider_author_id', 'name', 'url_image'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -37,14 +30,14 @@ class ReviewAuthor extends Model
 
 
     /**
-     * Get the ReviewSource that owns this ReviewAuthor.
+     * Get the ReviewProvider that owns this ReviewAuthor.
      */
-    public function source()
+    public function provider()
     {
-        return $this->belongsTo('WebModularity\LaravelLocal\Source');
+        return $this->belongsTo('WebModularity\LaravelProviders\ReviewProvider');
     }
 
     public function getUrlAttribute() {
-        return str_replace('{user_id}', $this->source_author_id, $this->source->url_review_user);
+        return str_replace('{user_id}', $this->review_provider_author_id, $this->provider->url_review_user);
     }
 }

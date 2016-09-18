@@ -4,7 +4,7 @@ namespace WebModularity\LaravelLocal\Console\Commands;
 
 use Illuminate\Console\Command;
 use WebModularity\LaravelLocal\Hour;
-use WebModularity\LaravelLocal\Source;
+use WebModularity\LaravelProviders\Provider;
 use Carbon\Carbon;
 
 class SyncHours extends Command
@@ -37,12 +37,12 @@ class SyncHours extends Command
     public function handle()
     {
         // Currently only supports Google for hours import
-        $source = Source::where('name', 'Google')->first();
-        if (method_exists(Hour::class, 'importFrom' . $source->name)
-            && method_exists(Source::class, 'getDataFrom' . $source->name)
+        $provider = Provider::where('slug', 'google')->first();
+        if (method_exists(Hour::class, 'importFrom' . studly_case($provider->slug))
+            && method_exists(Provider::class, 'getDataFrom' . studly_case($provider->slug))
         ) {
-            $data = call_user_func([Source::class, 'getDataFrom' . $source->name]);
-            $hoursChanged = call_user_func([Hour::class, 'importFrom' . $source->name], $data);
+            $data = call_user_func([Provider::class, 'getDataFrom' . studly_case($provider->slug)]);
+            $hoursChanged = call_user_func([Hour::class, 'importFrom' . studly_case($provider->slug)], $data);
         }
 
         if ($hoursChanged > 0) {

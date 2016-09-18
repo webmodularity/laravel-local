@@ -3,25 +3,17 @@
 namespace WebModularity\LaravelLocal;
 
 use Illuminate\Database\Eloquent\Model;
-use WebModularity\LaravelLocal\Source;
 use WebModularity\LaravelLocal\ReviewAuthor;
 use DB;
 
 class Review extends Model
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'local_reviews';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['author_id', 'source_review_id', 'active', 'rating', 'review', 'is_excerpt', 'review_created_at', 'review_updated_at'];
+    protected $fillable = ['author_id', 'review_id', 'active', 'rating', 'review', 'is_excerpt', 'review_created_at', 'review_updated_at'];
 
     protected $dates = ['review_created_at', 'review_updated_at', 'created_at', 'updated_at'];
 
@@ -34,26 +26,25 @@ class Review extends Model
     }
 
     public function getUrlAttribute() {
-        return str_replace('{review_id}', $this->source_review_id, $this->author->source->url_review);
+        return str_replace('{review_id}', $this->review_id, $this->author->provider->url_review);
     }
 
     public static function createReviewFromImport($reviewAuthor, $review) {
-        // Check for existence of this source_author_id
-        if (!ReviewAuthor::where('source_author_id', $reviewAuthor['source_author_id'])
-            ->where('source_id', $reviewAuthor['source_id'])
+        // Check for existence of this review_provider_author_id
+        if (!ReviewAuthor::where('review_provider_author_id', $reviewAuthor['review_provider_author_id'])
+            ->where('review_provider_id', $reviewAuthor['review_provider_id'])
             ->exists()) {
             DB::transaction(function () use ($reviewAuthor, $review) {
                 $reviewAuthor = ReviewAuthor::create([
-                    'source_id' => $reviewAuthor['source_id'],
-                    'source_author_id' => $reviewAuthor['source_author_id'],
+                    'review_provider_id' => $reviewAuthor['review_provider_id'],
+                    'review_provider_author_id' => $reviewAuthor['review_provider_author_id'],
                     'name' => $reviewAuthor['name'],
                     'url_image' => $reviewAuthor['url_image']
                 ]);
 
-                // Currently no way to pull review ID from places API
                 Review::create([
                     'author_id' => $reviewAuthor->id,
-                    'source_review_id' => $review['source_review_id'],
+                    'review_id' => $review['review_id'],
                     'active' => true,
                     'rating' => $review['rating'],
                     'review' => $review['review'],
@@ -69,19 +60,19 @@ class Review extends Model
         }
     }
 
-    public static function importFromGoogle($sourceId, $data) {
+    public static function importFromGoogle($reviewProviderId, $data) {
         $createCount = 0;
         foreach ($data['result']['reviews'] as $googleReview) {
             if (isset($googleReview['author_url']) && preg_match('/\/(\d+)$/', $googleReview['author_url'], $idMatch)) {
                 $reviewAuthor = [
-                    'source_id' => $sourceId,
-                    'source_author_id' => $idMatch[1],
+                    'review_provider_id' => $reviewProviderId,
+                    'review_provider_author_id' => $idMatch[1],
                     'name' => $googleReview['author_name'],
                     'url_image' => isset($googleReview['profile_photo_url']) ? $googleReview['profile_photo_url'] : null
                 ];
                 $review = [
                     // Currently no way to pull review ID from places API
-                    'source_review_id' => null,
+                    'review_id' => null,
                     'rating' => $googleReview['rating'],
                     'review' => $googleReview['text'],
                     'is_excerpt' => false,
@@ -94,21 +85,20 @@ class Review extends Model
         return $createCount;
     }
 
-    public static function importFromYelp($sourceId, $data) {
+    public static function importFromYelp($reviewProviderId, $data) {
         $createCount = 0;
         foreach ($data['reviews'] as $yelpReview) {
             $urlImage = isset($yelpReview->user->image_url)
                 ? preg_replace("/^http:/i", "https:", $yelpReview->user->image_url)
                 : null;
             $reviewAuthor = [
-                'source_id' => $sourceId,
-                'source_author_id' => $yelpReview->user->id,
+                'review_provider_id' => $reviewProviderId,
+                'review_provider_author_id' => $yelpReview->user->id,
                 'name' => $yelpReview->user->name,
                 'url_image' =>  $urlImage
             ];
             $review = [
-                // Currently no way to pull review ID from places API
-                'source_review_id' => $yelpReview->id,
+                'review_id' => $yelpReview->id,
                 'rating' => $yelpReview->rating,
                 'review' => $yelpReview->excerpt,
                 'is_excerpt' => true,
