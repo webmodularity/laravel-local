@@ -51,6 +51,8 @@ class SyncReviews extends Command
 
         if ($reviewsAdded > 0) {
             $this->line(Carbon::now() . ' Reviews Added: ' . $reviewsAdded);
+        } else {
+            $this->line('No Reviews Added!' . print_r($data));
         }
     }
 }
