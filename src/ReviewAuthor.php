@@ -32,12 +32,12 @@ class ReviewAuthor extends Model
     /**
      * Get the ReviewProvider that owns this ReviewAuthor.
      */
-    public function provider()
+    public function reviewProvider()
     {
         return $this->belongsTo('WebModularity\LaravelProviders\ReviewProvider');
     }
 
     public function getUrlAttribute() {
-        return str_replace('{user_id}', $this->review_provider_author_id, $this->provider->url_review_user);
+        return str_replace('{user_id}', $this->review_provider_author_id, $this->reviewProvider->url_review_user);
     }
 }

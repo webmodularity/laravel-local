@@ -26,7 +26,7 @@ class Review extends Model
     }
 
     public function getUrlAttribute() {
-        return str_replace('{review_id}', $this->review_id, $this->author->provider->url_review);
+        return str_replace('{review_id}', $this->review_id, $this->author->reviewProvider->url_review);
     }
 
     public static function createReviewFromImport($reviewAuthor, $review) {
