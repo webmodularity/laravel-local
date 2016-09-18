@@ -19,7 +19,7 @@ class CreateReviewTables extends Migration
             $table->string('name', 100);
             $table->string('url_image', 255)->nullable();
             $table->unique(['review_provider_id', 'review_provider_author_id']);
-            $table->foreign('review_provider_id')->references('id')->on('common.review_providers')->onUpdate('cascade');
+            $table->foreign('review_provider_id', 'review_providers_id_review_authors_review_provider_id')->references('id')->on('common.review_providers')->onUpdate('cascade');
         });
 
         Schema::create('reviews', function (Blueprint $table) {
@@ -35,7 +35,7 @@ class CreateReviewTables extends Migration
             $table->timestamps();
             $table->index(['active', 'rating', 'review_updated_at']);
             $table->index(['active', 'review_updated_at']);
-            $table->foreign('author_id')->references('id')->on('review_authors')->onUpdate('cascade');
+            $table->foreign('author_id', 'review_authors_id_reviews_author_id')->references('id')->on('review_authors')->onUpdate('cascade');
         });
     }
 
