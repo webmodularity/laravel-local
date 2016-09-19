@@ -9,6 +9,9 @@ class LocalServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        // Register LaravelProviders Service Provider
+        $this->app->register('WebModularity\LaravelProviders\ProvidersServiceProvider');
+
         // Console Commands
         $this->commands([
             Console\Commands\SyncReviews::class,
