@@ -62,6 +62,7 @@ class Review extends Model
 
     public static function importFromGoogle($reviewProviderId, $data) {
         $createCount = 0;
+        dd($data['result']['reviews']);
         foreach ($data['result']['reviews'] as $googleReview) {
             if (isset($googleReview['author_url']) && preg_match('/\/(\d+)$/', $googleReview['author_url'], $idMatch)) {
                 $reviewAuthor = [
